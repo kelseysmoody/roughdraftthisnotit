@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solitaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #006400;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            margin: 20px 0;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .pile {
+            background-color: #004400;
+            border: 2px solid #008800;
+            border-radius: 8px;
+            height: 150px;
+            position: relative;
+        }
+
+        .card {
+            width: 100px;
+            height: 140px;
+            border-radius: 5px;
+            background-color: white;
+            border: 2px solid black;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: grab;
+        }
+
+        .card.face-down {
+            background-color: blue;
+            color: transparent;
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+        }
+
+        #instructions {
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Solitaire</h1>
+    <div id="game-board">
+        <div class="pile" id="pile-1"></div>
+        <div class="pile" id="pile-2"></div>
+        <div class="pile" id="pile-3"></div>
+        <div class="pile" id="pile-4"></div>
+        <div class="pile" id="pile-5"></div>
+        <div class="pile" id="pile-6"></div>
+        <div class="pile" id="pile-7"></div>
+    </div>
+    <p id="instructions">Drag and drop cards to play!</p>
+
+    <script>
+        const board = document.getElementById('game-board');
+
+        // Create cards dynamically
+        function createCards() {
+            for (let i = 1; i <= 13; i++) { // 13 cards in a suit
+                const card = document.createElement('div');
+                card.classList.add('card', 'face-down');
+                card.textContent = i;
+                board.children[0].appendChild(card); // Add all cards to pile-1 for now
+
+                // Add drag functionality
+                card.draggable = true;
+                card.addEventListener('dragstart', () => {
+                    card.classList.add('dragging');
+                });
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                });
+            }
+        }
+
+        createCards();
+
+        // Add drop functionality to piles
+        const piles = document.querySelectorAll('.pile');
+        piles.forEach(pile => {
+            pile.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const draggingCard = document.querySelector('.dragging');
+                pile.appendChild(draggingCard);
+            });
+        });
+    </script>
+</body>
+</html>
